@@ -88,7 +88,7 @@ The backlog is home base and the user is in control. Only enter this phase once 
 
 Never push toward building. Surfacing options the user can sit with is success.
 
-Optional visual mode: if the user would rather click than type, offer to render the menu/walkthrough as an interactive HTML artifact in the framework's visual style. Turn-by-turn conversation is the default.
+Optional visual mode: if the user would rather click than type, offer to render the menu/walkthrough as an interactive HTML artifact reusing the visual language of `assets/use-case-framework.html`. Turn-by-turn conversation is the default.
 
 ## Phase 4 — Capture & status tracking (continuous)
 
@@ -109,3 +109,4 @@ The user's `gotchas.md` is the section that grows over time. You read it in Phas
 - `references/connectors.md` — how to find connector tools by suffix, and what general context to pull from each. Read before Phase 1b.
 - `references/use-case-template.md` — the stub vs full use-case shapes, the `status` lifecycle, and the `backlog.md` shape. Read before Phase 2.
 - `references/gotchas-seed.md` — generic starting gotchas; seeds the user's living `gotchas.md`. Read/copy in Phase 0.
+- `assets/use-case-framework.html` — the original visual framework, for reference or the optional visual mode.
