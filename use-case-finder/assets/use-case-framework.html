@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Use-Case Framework — Find the Sting, Map the Work, Pick the Build</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4EEE3;
+    --surface:#FBF8F1;
+    --ink:#211C16;
+    --muted:#736A5C;
+    --line:#DED4C2;
+    --line-2:#D2C7B2;
+    --terra:#BC4A28;
+    --teal:#2F5C56;
+    --ochre:#A26B1F;
+    --good:#2F5C56;
+    --shadow:0 1px 2px rgba(33,28,22,.04), 0 10px 30px -18px rgba(33,28,22,.20);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--ink);line-height:1.5;
+    background:
+      radial-gradient(1100px 600px at 90% -10%, #F8E9D6 0%, transparent 55%),
+      radial-gradient(900px 600px at -8% 14%, #E7EBE3 0%, transparent 50%),
+      var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1040px;margin:0 auto;padding:clamp(28px,5vw,72px) clamp(20px,4vw,56px) 72px;}
+
+  /* header */
+  .kicker{font-size:12.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin:0 0 18px;}
+  h1{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(36px,6.4vw,62px);line-height:1.03;letter-spacing:-.015em;margin:0;}
+  h1 em{font-style:italic;color:var(--terra);}
+  .lede{margin:22px 0 0;max-width:64ch;font-size:clamp(15px,1.7vw,17.5px);color:var(--muted);}
+  .arc{display:flex;flex-wrap:wrap;gap:10px 14px;margin:26px 0 0;font-family:"Fraunces",serif;font-style:italic;font-size:17px;color:var(--muted);}
+  .arc b{font-style:normal;font-weight:600;color:var(--ink);}
+  .arc .sep{color:var(--line-2);}
+  .rule{height:1px;background:var(--line);border:0;margin:clamp(32px,4vw,48px) 0;}
+
+  /* stage scaffold */
+  .stage{margin-bottom:clamp(40px,5vw,60px);}
+  .stage-head{display:flex;align-items:baseline;gap:16px;margin-bottom:4px;}
+  .num{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(32px,5vw,46px);line-height:1;color:var(--accent);flex:none;}
+  .stage-title{font-family:"Fraunces",serif;font-weight:500;font-size:clamp(22px,2.7vw,28px);letter-spacing:-.01em;margin:0;}
+  .stage-sub{margin:5px 0 0;color:var(--muted);font-size:15.5px;max-width:66ch;}
+  .s1{--accent:var(--terra);}
+  .s2{--accent:var(--teal);}
+  .s3{--accent:var(--ochre);}
+
+  .asks{margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .asks li{font-family:"Fraunces",serif;font-style:italic;font-size:16px;color:var(--ink);padding-left:22px;position:relative;}
+  .asks li::before{content:"";position:absolute;left:0;top:11px;width:9px;height:1.5px;background:var(--accent);}
+
+  /* grids + cards */
+  .grid{display:grid;gap:14px;margin-top:24px;}
+  .g5{grid-template-columns:repeat(5,1fr);}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:900px){.g5{grid-template-columns:repeat(2,1fr);}.g4{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.g5,.g4,.g2{grid-template-columns:1fr;}}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 18px 20px;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s,border-color .25s;}
+  .card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--accent);opacity:0;transition:opacity .25s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -20px rgba(33,28,22,.32);border-color:var(--line-2);}
+  .card:hover::before{opacity:1;}
+  .card .name{font-family:"Fraunces",serif;font-weight:600;font-size:17.5px;letter-spacing:-.01em;margin:0 0 8px;}
+  .card .sit{font-size:14px;font-weight:500;margin:0 0 9px;}
+  .card .eg{font-size:12.5px;color:var(--muted);font-style:italic;margin:0;line-height:1.45;}
+
+  /* map columns: keep vs drop, ai vs you */
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;}
+  @media(max-width:560px){.pair{grid-template-columns:1fr;}}
+  .col{border-radius:16px;padding:18px 20px 20px;border:1px solid var(--line);background:var(--surface);}
+  .col h4{margin:0 0 4px;font-family:"Fraunces",serif;font-weight:600;font-size:18px;letter-spacing:-.01em;}
+  .col .hint{margin:0 0 14px;font-size:13px;color:var(--muted);}
+  .col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .col li{font-size:14px;padding-left:24px;position:relative;line-height:1.4;}
+  .keep{border-left:3px solid var(--good);}
+  .keep h4{color:var(--good);}
+  .keep li::before{content:"✓";position:absolute;left:2px;top:0;color:var(--good);font-weight:700;}
+  .drop{border-left:3px solid var(--line-2);}
+  .drop h4{color:var(--muted);}
+  .drop li{color:var(--muted);text-decoration:line-through;text-decoration-color:#B9AE99;text-decoration-thickness:1px;}
+  .drop li::before{content:"—";position:absolute;left:2px;top:0;color:var(--line-2);text-decoration:none;}
+  .does{border-left:3px solid var(--teal);}
+  .does h4{color:var(--teal);}
+  .does li::before{content:"→";position:absolute;left:2px;top:0;color:var(--teal);font-weight:700;}
+  .youkeep{border-left:3px solid var(--terra);}
+  .youkeep h4{color:var(--terra);}
+  .youkeep li::before{content:"●";position:absolute;left:3px;top:1px;color:var(--terra);font-size:9px;}
+
+  .today{border-left:3px solid var(--teal);}
+
+  /* build cards */
+  .bcard{background:linear-gradient(180deg,#F1EBDD,#ECE4D3);border:1px solid #DBD0BB;box-shadow:none;}
+  .bcard::before{background:var(--ochre);}
+  .bcard .when{font-size:11.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ochre);margin:0 0 9px;}
+  .bcard .desc{font-size:13.5px;color:var(--muted);margin:6px 0 0;line-height:1.45;}
+  .where{margin:13px 0 0;padding-top:12px;border-top:1px solid #DBD0BB;font-size:12.5px;font-weight:600;color:var(--ochre);line-height:1.4;}
+  .where span{color:var(--muted);font-weight:500;}
+  .further-lab{display:flex;align-items:center;gap:14px;margin:32px 0 0;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+  .further-lab .ln{height:1px;background:var(--line);flex:1;}
+  .fcard{background:transparent;border:1px dashed var(--line-2);box-shadow:none;}
+  .fcard::before{display:none;}
+  .fcard:hover{border-style:solid;border-color:var(--ochre);transform:translateY(-3px);box-shadow:0 16px 36px -22px rgba(33,28,22,.26);}
+  .fcard .name{display:flex;align-items:center;gap:9px;}
+  .fcard .name .dot{width:7px;height:7px;border-radius:50%;background:var(--ochre);flex:none;}
+  .fcard .where{border-top-color:var(--line);}
+
+  /* insight */
+  .insight{margin-top:8px;border-radius:18px;border:1px solid var(--line);background:var(--surface);padding:24px 26px;display:flex;gap:20px;align-items:flex-start;}
+  .insight .mark{font-family:"Fraunces",serif;font-style:italic;font-size:44px;line-height:.7;color:var(--terra);flex:none;}
+  .insight p{margin:0;font-size:15px;max-width:78ch;}
+  .insight strong{font-weight:700;}
+
+  @media(prefers-reduced-motion:no-preference){
+    .reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards;}
+    @keyframes rise{to{opacity:1;transform:none;}}
+  }
+  @media print{body{background:#fff;}.card,.bcard,.insight,.col{box-shadow:none;}.reveal{opacity:1!important;transform:none!important;animation:none!important;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="reveal" style="animation-delay:.02s">
+    <p class="kicker">The use-case framework</p>
+    <h1>Start where it <em>stings</em>.<br>Then figure out what to build.</h1>
+    <p class="lede">You can't find a use case by asking “what can AI do?” — that's a blank page. You find it by pointing at the part of your work that already hurts, getting honest about how it really works, and only then deciding what to build for it. Sometimes that's a chat. Sometimes it's a tool you never thought you could make.</p>
+    <div class="arc">
+      <span><b>1 — Find the sting</b></span><span class="sep">/</span>
+      <span><b>2 — Map the work</b></span><span class="sep">/</span>
+      <span><b>3 — Pick the build</b></span>
+    </div>
+  </header>
+
+  <hr class="rule reveal" style="animation-delay:.05s">
+
+  <!-- STAGE 1 -->
+  <section class="stage s1 reveal" style="animation-delay:.09s">
+    <div class="stage-head"><span class="num">1</span>
+      <div><h2 class="stage-title">Find the sting</h2>
+        <p class="stage-sub">Don't hunt for a use case. Point at the situation that already grates — that's your starting task. Then name what actually hurts about it.</p></div>
+    </div>
+    <div class="grid g5">
+      <article class="card"><p class="name">The rebuild</p><p class="sit">The thing you redo from scratch every week.</p><p class="eg">the report, the recap, the tracker, the update</p></article>
+      <article class="card"><p class="name">The blank page</p><p class="sit">The thing you stare at before you can start.</p><p class="eg">the proposal, the deck, the memo, the job post</p></article>
+      <article class="card"><p class="name">The pile</p><p class="sit">The stack you wade through to find what matters.</p><p class="eg">the inbox, the transcripts, the contracts, the replies</p></article>
+      <article class="card"><p class="name">The bottleneck</p><p class="sit">The thing only you know how to do.</p><p class="eg">the question everyone routes to you</p></article>
+      <article class="card"><p class="name">The wish</p><p class="sit">What you'd do if you had more time.</p><p class="eg">the analysis you skip, the follow-ups that vanish</p></article>
+    </div>
+    <ul class="asks">
+      <li>Which one stings the most right now?</li>
+      <li>What's the pain underneath it — the time, the dread, the errors, or that it just never gets done?</li>
+      <li>If this got easier, what would actually change for you?</li>
+    </ul>
+  </section>
+
+  <hr class="rule reveal" style="animation-delay:.12s">
+
+  <!-- STAGE 2 -->
+  <section class="stage s2 reveal" style="animation-delay:.15s">
+    <div class="stage-head"><span class="num">2</span>
+      <div><h2 class="stage-title">Map the work</h2>
+        <p class="stage-sub">Before handing anything over, get honest about how it really works. Most people automate the task as-is — but half of it only exists out of habit. Separate what's sacred from what's just inertia, then split the rest.</p></div>
+    </div>
+
+    <!-- today -->
+    <div class="card today" style="margin-top:24px;border-radius:16px;">
+      <p class="name" style="color:var(--teal);">Today — how it actually runs</p>
+      <p class="sit" style="font-weight:400;color:var(--muted);">Walk the real steps, start to finish, and mark where it stalls or drains you.</p>
+      <ul class="asks" style="margin-top:12px;">
+        <li>What are the actual steps, from trigger to done?</li>
+        <li>Where does it slow down, break, or get boring?</li>
+        <li>What inputs does it need, and where do they come from?</li>
+      </ul>
+    </div>
+
+    <!-- keep vs drop -->
+    <div class="pair">
+      <div class="col keep">
+        <h4>Keep — must stay true</h4>
+        <p class="hint">The standards and realities the result has to honor.</p>
+        <ul>
+          <li>Your judgment and the final call</li>
+          <li>The voice, tone, or relationship someone expects</li>
+          <li>Accuracy, confidentiality, the compliance lines</li>
+        </ul>
+      </div>
+      <div class="col drop">
+        <h4>Drop — doesn't need to stay true</h4>
+        <p class="hint">The bits you assume are fixed but really aren't.</p>
+        <ul>
+          <li>The format nobody actually reads</li>
+          <li>Doing it manually because you always have</li>
+          <li>Starting from a blank page every time</li>
+          <li>You being the only one who can do it</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ai does vs you keep -->
+    <div class="pair">
+      <div class="col does">
+        <h4>AI should do</h4>
+        <p class="hint">Repeatable, describable, checkable.</p>
+        <ul>
+          <li>First drafts and rough cuts</li>
+          <li>Sifting, sorting, summarizing the pile</li>
+          <li>Reformatting and restructuring</li>
+          <li>Generating options to react to</li>
+        </ul>
+      </div>
+      <div class="col youkeep">
+        <h4>AI shouldn't — you keep</h4>
+        <p class="hint">Judgment, taste, accountability.</p>
+        <ul>
+          <li>The final decision and what ships</li>
+          <li>The relationships and the read of the room</li>
+          <li>Knowing when the output is wrong</li>
+        </ul>
+      </div>
+    </div>
+    <ul class="asks">
+      <li>What in “keep” must AI respect — and what in “drop” can it rethink entirely?</li>
+      <li>After the split: how much of this is AI's, and how much stays yours?</li>
+    </ul>
+  </section>
+
+  <hr class="rule reveal" style="animation-delay:.18s">
+
+  <!-- STAGE 3 -->
+  <section class="stage s3 reveal" style="animation-delay:.21s">
+    <div class="stage-head"><span class="num">3</span>
+      <div><h2 class="stage-title">Pick the build</h2>
+        <p class="stage-sub">The shape of the work tells you what to make — and where to make it. The more of it is AI's, the more it repeats, and the more you trust it, the further down the list you go. Then a cadence can let any build run on its own — with your connectors switched on underneath so it can reach your real work.</p></div>
+    </div>
+    <div class="grid g4">
+      <article class="card bcard"><p class="when">Stay close · one-off</p><p class="name">A chat</p><p class="desc">You're still figuring it out, or it's a one-time thing. Think together, turn by turn. Zero setup.</p><p class="where">in: <span>Claude Chat</span></p></article>
+      <article class="card bcard"><p class="when">Recurring · your context</p><p class="name">A Project</p><p class="desc">It keeps coming back and leans on your docs, voice, and rules. Load them once; it drafts, you spot-check.</p><p class="where">in: <span>Claude Chat — or Cowork when it touches your files &amp; apps</span></p></article>
+      <article class="card bcard"><p class="when">Same job · every time</p><p class="name">A Skill</p><p class="desc">It's the same task on repeat and you want it done consistently. Package it once so it runs the same way every time.</p><p class="where">in: <span>Cowork or Claude Code</span></p></article>
+      <article class="card bcard"><p class="when">Didn't exist before</p><p class="name">An app or tool</p><p class="desc">What you actually need isn't a document — it's a small tool built for exactly your problem. The thing you never thought you could make.</p><p class="where">in: <span>an Artifact in chat — or Claude Code / API for the real build</span></p></article>
+    </div>
+
+    <div class="further-lab reveal" style="animation-delay:.25s"><span>And to make any build reach further</span><span class="ln"></span></div>
+    <div class="grid g2 reveal" style="animation-delay:.28s">
+      <article class="card fcard"><p class="when" style="color:var(--ochre)">Let it run on its own</p><p class="name"><span class="dot"></span>A scheduled automation</p><p class="desc">Wrap a Project or Skill in a cadence and it runs without you — the Friday report, the morning inbox scan, the weekly digest. Set it once; come back to the result.</p><p class="where">in: <span>Cowork scheduled tasks — or Claude Code / API for fully hands-off</span></p></article>
+      <article class="card fcard" style="border-style:solid;background:var(--surface);"><p class="when" style="color:var(--muted)">Setup, not a build</p><p class="name"><span class="dot"></span>Turn on your connectors</p><p class="desc">Connectors aren't something you build — they're the plumbing. Switch on email, files, Slack, and your systems once, and every build above can act on your real work instead of just advising on it.</p></article>
+    </div>
+  </section>
+
+  <!-- insight -->
+  <div class="insight reveal" style="animation-delay:.29s">
+    <span class="mark">“</span>
+    <p>The trap is building before you've mapped. People wrap a Skill around a broken process and automate the inertia. <strong>Map first</strong> — decide what must stay true and what was only ever habit — and the right build usually picks itself. And the honest gut-check before you trust it far: <strong>can I tell when it's wrong without redoing it myself?</strong> If not, keep your hands on it.</p>
+  </div>
+
+</div>
+</body>
+</html>
