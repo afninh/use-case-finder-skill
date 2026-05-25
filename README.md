@@ -19,11 +19,13 @@ Nothing is forced. "Interesting idea, saved for later" is a perfectly good outco
 ```
 use-case-finder/
 ├── SKILL.md                     # the orchestrator (the flow above)
-└── references/
-    ├── framework.md             # the Find-the-sting / Map-the-work / Pick-the-build framework
-    ├── connectors.md            # how to find connector tools + what context to pull
-    ├── use-case-template.md     # the use-case file + backlog shapes, and the status lifecycle
-    └── gotchas-seed.md          # generic starting lessons that seed your living gotchas
+├── references/
+│   ├── framework.md             # the Find-the-sting / Map-the-work / Pick-the-build framework
+│   ├── connectors.md            # how to find connector tools + what context to pull
+│   ├── use-case-template.md     # the use-case file + backlog shapes, and the status lifecycle
+│   └── gotchas-seed.md          # generic starting lessons that seed your living gotchas
+└── assets/
+    └── use-case-framework.html  # the original visual framework (style reference for the optional visual mode)
 ```
 
 Your generated, personal artifacts (your profile, use cases, backlog, and gotchas) are written to a separate workspace — **`~/claude-use-cases/`** — never inside the skill folder.
